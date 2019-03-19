@@ -26,6 +26,9 @@ class AppKernel extends Kernel
 
             new \FOS\OAuthServerBundle\FOSOAuthServerBundle(), // Required by SyliusAdminApiBundle.
             new \Sylius\Bundle\AdminApiBundle\SyliusAdminApiBundle(),
+            new Xynnn\GoogleTagManagerBundle\GoogleTagManagerBundle(),
+            new GtmPlugin\GtmPlugin(),
+            new StefanDoorn\SyliusGtmEnhancedEcommercePlugin\SyliusGtmEnhancedEcommercePlugin(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test', 'test_cached'], true)) {

@@ -1,0 +1,57 @@
+version: '3'
+services:
+    node:
+        image: node:8.3
+        container_name: node-${COMPOSE_PROJECT_NAME}
+        volumes:
+          - project-data:/var/www/html
+        working_dir: /var/www/html
+        tty: true
+    db:
+        image: mysql:5.7
+        container_name: mysql-${COMPOSE_PROJECT_NAME}
+        ports:
+            - 3306:3306
+        volumes:
+            - ./.data/mysql:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    php:
+        build: docker/php-fpm
+        container_name: php-${COMPOSE_PROJECT_NAME}
+        environment:
+          XDEBUG_CONFIG: remote_host=${XDEBUG_HOST} remote_enable=1 remote_port=9000 idekey=XDEBUG_SESSION_START
+        volumes:
+           - ~/.ssh/id_rsa:/root/.ssh/id_rsa:ro
+           - project-data:/var/www/html
+#           - ${CMS_BUNDLE_PATH}:/var/www/cms
+        depends_on:
+          - db
+    nginx:
+        image: nginx:1.12
+        container_name: nginx-${COMPOSE_PROJECT_NAME}
+        ports:
+          - 8082:80
+        depends_on:
+          - php
+        volumes:
+          - ./docker/nginx/symfony.conf:/etc/nginx/conf.d/mysite.template
+          - project-data:/var/www/html
+          - ./.logs:/var/log/nginx
+        working_dir: /var/www/html
+        environment:
+          - NGINX_HOST=${NGINX_HOST}
+          - NGINX_ROOT_PATH=/var/www/html/web
+        command: /bin/bash -c "envsubst '$$NGINX_HOST $$NGINX_ROOT_PATH' < /etc/nginx/conf.d/mysite.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+volumes:
+  project-data:
+    driver: local
+    driver_opts:
+#      o: addr=host.docker.internal,rw,nolock,hard,nointr,nfsvers=3
+#      type: "nfs"
+      type: none
+      o: bind
+      device: ${SYMFONY_APP_PATH}

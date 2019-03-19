@@ -71,7 +71,9 @@
         "willdurand/hateoas-bundle": "^1.2",
         "winzou/state-machine-bundle": "^0.3",
         "zendframework/zend-hydrator": "^2.2",
-        "zendframework/zend-stdlib": "^3.1"
+        "zendframework/zend-stdlib": "^3.1",
+        "stefandoorn/sylius-google-tag-manager-enhanced-ecommerce-plugin": "^0.8.1",
+        "stefandoorn/google-tag-manager-plugin": "^0.3.0"
     },
     "require-dev": {
         "akeneo/phpspec-skip-example-extension": "^4.0",

@@ -68,3 +68,16 @@ liip_imagine:
             web_path:
                 web_root: "%kernel.project_dir%/web"
                 cache_prefix: "media/cache"
+
+google_tag_manager:
+    enabled: true
+    id: "GTM-MMW4H83"
+    autoAppend: false
+
+gtm:
+    inject: true
+    features:
+        environment: true
+        route: true
+        context: true
+        events: true
